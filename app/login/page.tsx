@@ -21,6 +21,12 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      // If Firebase is not configured, just redirect to home
+      if (!auth) {
+        router.push('/home');
+        return;
+      }
+
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {

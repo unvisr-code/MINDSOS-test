@@ -10,6 +10,13 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // If Firebase is not configured, redirect to home
+    if (!auth) {
+      router.push('/home');
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
       if (user) {
         router.push('/home');
