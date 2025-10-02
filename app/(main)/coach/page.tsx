@@ -255,17 +255,17 @@ export default function CoachPage() {
   }, [selectedLetter]);
 
   return (
-    <div className="min-h-screen bg-sage-50">
-      {/* Simple Header */}
-      <div className="bg-gradient-to-b from-sage-500 to-sage-600 text-white px-4 sm:px-6 pt-safe pt-8 sm:pt-10 pb-6">
-        <h1 className="text-2xl font-bold mb-2">AI 코치</h1>
-        <p className="text-sage-100 text-sm">마음을 나누고 성장하는 대화</p>
+    <div className="min-h-screen bg-neutral-50">
+      {/* Clean Professional Header */}
+      <div className="bg-primary-600 text-white px-6 pt-safe pt-8 pb-6">
+        <h1 className="text-xl font-bold mb-1">AI 코치</h1>
+        <p className="text-white/80 text-sm">마음을 나누고 성장하는 대화</p>
       </div>
 
       {/* AI 코치 선택 */}
-      <div className="px-4 sm:px-6 -mt-4 mb-6">
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-sage-100">
-          <h3 className="font-semibold text-base text-gray-900 mb-4">당신의 마음 동반자를 선택하세요</h3>
+      <div className="px-6 py-6">
+        <div className="bg-white rounded-2xl p-5 shadow-md border border-neutral-200">
+          <h3 className="font-semibold text-base text-neutral-900 mb-4">당신의 마음 동반자를 선택하세요</h3>
 
           {/* Coach Grid */}
           <div className="grid grid-cols-3 gap-3 mb-4">
@@ -273,26 +273,26 @@ export default function CoachPage() {
               <button
                 key={coach.id}
                 onClick={() => router.push(`/coach/chat?coachId=${coach.id}`)}
-                className="flex flex-col items-center gap-2 p-3 rounded-xl bg-sage-50 hover:bg-sage-100 active:bg-sage-200 transition-colors touch-manipulation"
+                className="flex flex-col items-center gap-2 p-3 rounded-xl bg-neutral-50 hover:bg-neutral-100 transition-colors touch-manipulation border border-neutral-200"
                 aria-label={`${coach.name} 코치와 대화하기`}
               >
                 {/* Avatar */}
-                <div className="relative w-14 h-14 bg-white rounded-xl flex items-center justify-center text-3xl shadow-sm">
+                <div className="relative w-12 h-12 bg-white rounded-lg flex items-center justify-center text-2xl shadow-sm border border-neutral-100">
                   {coach.emoji}
-                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-sky-500 rounded-full border-2 border-white"></div>
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent-500 rounded-full border-2 border-white"></div>
                 </div>
                 <div className="text-center">
-                  <span className="text-xs font-semibold text-gray-900 block">{coach.name}</span>
-                  <span className="text-[10px] text-gray-500 block mt-0.5 line-clamp-1">{coach.personality}</span>
+                  <span className="text-xs font-semibold text-neutral-900 block">{coach.name}</span>
+                  <span className="text-[10px] text-neutral-500 block mt-0.5 line-clamp-1">{coach.personality}</span>
                 </div>
               </button>
             ))}
           </div>
 
           {/* Info */}
-          <div className="pt-4 border-t border-gray-100 flex items-center justify-center gap-4 text-xs text-gray-600">
+          <div className="pt-4 border-t border-neutral-200 flex items-center justify-center gap-4 text-xs text-neutral-600">
             <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 bg-sky-500 rounded-full"></div>
+              <div className="w-1.5 h-1.5 bg-accent-500 rounded-full"></div>
               <span>{mockAICoaches.length}명 대기중</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -304,20 +304,21 @@ export default function CoachPage() {
       </div>
 
       {/* Letters List Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <h2 className="text-lg font-semibold text-gray-900">내 편지</h2>
+      <div className="px-6 py-4 border-b border-neutral-200">
+        <h2 className="text-base font-semibold text-neutral-900">내 편지</h2>
       </div>
 
       {/* Letters List */}
-      <div className="px-4 py-4 space-y-3 pb-24">
+      <div className="px-6 py-4 space-y-3 pb-24">
         {loading ? (
           <div className="text-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-lavender-600 mx-auto" />
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary-200 border-t-primary-600 mx-auto"></div>
           </div>
         ) : letters.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">편지가 없습니다</p>
-            <p className="text-sm text-gray-400 mt-2">첫 편지를 작성해보세요</p>
+            <MessageCircle className="w-12 h-12 mx-auto mb-3 text-neutral-300" />
+            <p className="text-neutral-600 text-sm mb-1">편지가 없습니다</p>
+            <p className="text-xs text-neutral-400">첫 편지를 작성해보세요</p>
           </div>
         ) : (
           letters.map((letter) => {
@@ -326,24 +327,24 @@ export default function CoachPage() {
               <div
                 key={letter.id}
                 onClick={() => setSelectedLetter(letter)}
-                className="bg-white rounded-xl p-4 shadow-sm active:shadow-md transition-shadow cursor-pointer touch-manipulation"
+                className="bg-white rounded-xl p-4 shadow-md border border-neutral-200 hover:shadow-lg transition-shadow cursor-pointer touch-manipulation"
               >
-                <div className="flex items-start justify-between mb-2.5">
-                  <h3 className="font-semibold text-gray-900 text-sm sm:text-base line-clamp-1 flex-1 min-w-0">{letter.title}</h3>
-                  <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="font-semibold text-neutral-900 text-sm line-clamp-1 flex-1">{letter.title}</h3>
+                  <span className="text-xs text-neutral-500 ml-2">
                     {letter.createdAt && new Date(letter.createdAt.toString()).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                   </span>
                 </div>
-                <p className="text-gray-600 text-xs sm:text-sm mb-2.5 line-clamp-2 leading-relaxed">{letter.content}</p>
+                <p className="text-neutral-600 text-xs mb-2 line-clamp-2">{letter.content}</p>
                 {letter.aiResponse && (
-                  <div className={`bg-gradient-to-br ${coach.color}/10 rounded-lg p-2.5 sm:p-3 mt-2.5`}>
-                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-                      <div className={`w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br ${coach.color} rounded-full flex items-center justify-center text-xs flex-shrink-0`}>
+                  <div className="bg-primary-50 rounded-lg p-3 mt-2 border border-primary-100">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <div className="w-5 h-5 bg-primary-600 rounded-full flex items-center justify-center text-xs">
                         {coach.emoji}
                       </div>
-                      <span className="text-xs font-medium text-gray-900">{coach.name}의 답변</span>
+                      <span className="text-xs font-medium text-neutral-900">{coach.name}의 답변</span>
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-700 line-clamp-2 leading-relaxed">{letter.aiResponse}</p>
+                    <p className="text-xs text-neutral-700 line-clamp-2">{letter.aiResponse}</p>
                   </div>
                 )}
               </div>
@@ -355,10 +356,10 @@ export default function CoachPage() {
       {/* Floating Action Button */}
       <button
         onClick={() => router.push('/coach/chat')}
-        className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-peach-400 to-peach-500 text-white rounded-full shadow-lg active:shadow-xl transition-all flex items-center justify-center active:scale-95 touch-manipulation"
+        className="fixed bottom-20 right-6 w-14 h-14 bg-accent-600 text-white rounded-full shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center touch-manipulation"
         aria-label="AI 코치와 대화하기"
       >
-        <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
+        <MessageCircle className="w-6 h-6" />
       </button>
     </div>
   );
