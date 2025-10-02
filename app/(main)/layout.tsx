@@ -16,6 +16,12 @@ export default function MainLayout({
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // If Firebase is not configured, skip auth check
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser: User | null) => {
       setUser(firebaseUser);
 

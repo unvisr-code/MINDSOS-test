@@ -12,28 +12,33 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Validate Firebase config
+// Check if Firebase config is complete
 const missingKeys = Object.entries(firebaseConfig)
   .filter(([key, value]) => !value)
   .map(([key]) => key);
 
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
+let storage: FirebaseStorage | null = null;
+
 if (missingKeys.length > 0) {
-  console.error('Missing Firebase configuration:', missingKeys);
-  throw new Error(`Missing Firebase configuration: ${missingKeys.join(', ')}`);
-}
-
-// Initialize Firebase
-let app: FirebaseApp;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
-  console.log('Firebase initialized successfully');
+  console.warn('Missing Firebase configuration:', missingKeys);
+  console.warn('Running in mock data mode');
 } else {
-  app = getApps()[0];
-  console.log('Using existing Firebase app');
+  // Initialize Firebase only if config is complete
+  if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+    console.log('Firebase initialized successfully');
+  } else {
+    app = getApps()[0];
+    console.log('Using existing Firebase app');
+  }
+
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
 }
 
-export const auth: Auth = getAuth(app);
-export const db: Firestore = getFirestore(app);
-export const storage: FirebaseStorage = getStorage(app);
-
+export { auth, db, storage };
 export default app;

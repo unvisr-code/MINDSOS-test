@@ -3,6 +3,7 @@ import { User as FirebaseUser } from 'firebase/auth';
 import { auth } from './firebase';
 import type { User } from '@/types';
 import { getUserProfile, createUserProfile } from './firestore';
+import { mockUser } from './mockData';
 
 export function useAuth() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -10,6 +11,14 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // If Firebase is not configured, use mock data
+    if (!auth) {
+      setUser(null);
+      setUserProfile(mockUser);
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
       try {
         setUser(firebaseUser);
