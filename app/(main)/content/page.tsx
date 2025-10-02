@@ -33,42 +33,52 @@ export default function ContentPage() {
   const getColor = (type: string) => {
     switch (type) {
       case 'tip':
-        return 'from-peach-400 to-peach-500';
+        return 'from-accent-400 to-accent-500';
       case 'newsletter':
-        return 'from-lavender-400 to-lavender-500';
+        return 'from-primary-400 to-primary-500';
       case 'music':
-        return 'from-mint-400 to-mint-500';
+        return 'from-secondary-400 to-secondary-500';
       case 'sns':
-        return 'from-lavender-500 to-lavender-600';
+        return 'from-primary-500 to-primary-600';
       default:
-        return 'from-gray-500 to-gray-600';
+        return 'from-neutral-500 to-neutral-600';
     }
   };
 
   return (
-    <div className="min-h-screen bg-sage-50">
-      {/* Simple Header */}
-      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 pt-safe pt-8 pb-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">콘텐츠</h1>
-        <p className="text-sm text-gray-600 mb-3">마음을 채우는 순간들</p>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 pb-20">
+      {/* Modern Gradient Header */}
+      <div className="relative bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-white px-6 pt-safe pt-10 pb-24 overflow-hidden">
+        {/* Decorative Background */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary-400/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
 
-        {/* Filter Chips */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-          <button className="px-4 py-2 rounded-full bg-sage-500 text-white text-sm font-medium whitespace-nowrap">
-            전체
-          </button>
-          <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors touch-manipulation">
-            명상
-          </button>
-          <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors touch-manipulation">
-            운동
-          </button>
-          <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors touch-manipulation">
-            글귀
-          </button>
-          <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors touch-manipulation">
-            영상
-          </button>
+        <div className="relative">
+          <h1 className="text-3xl font-bold mb-2 tracking-tight">콘텐츠</h1>
+          <p className="text-white/80 text-base font-medium">마음을 채우는 순간들</p>
+        </div>
+      </div>
+
+      {/* Floating Filter Chips */}
+      <div className="px-6 -mt-8 relative z-20 mb-6">
+        <div className="bg-white/95 backdrop-blur-md rounded-3xl p-4 shadow-xl shadow-primary-500/10 border border-white/50">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+            <button className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-sm font-semibold whitespace-nowrap shadow-lg shadow-primary-500/30 scale-105">
+              전체
+            </button>
+            <button className="px-5 py-2.5 rounded-2xl bg-white text-neutral-600 text-sm font-semibold whitespace-nowrap hover:bg-neutral-50 hover:scale-105 transition-all touch-manipulation shadow-md">
+              명상
+            </button>
+            <button className="px-5 py-2.5 rounded-2xl bg-white text-neutral-600 text-sm font-semibold whitespace-nowrap hover:bg-neutral-50 hover:scale-105 transition-all touch-manipulation shadow-md">
+              운동
+            </button>
+            <button className="px-5 py-2.5 rounded-2xl bg-white text-neutral-600 text-sm font-semibold whitespace-nowrap hover:bg-neutral-50 hover:scale-105 transition-all touch-manipulation shadow-md">
+              글귀
+            </button>
+            <button className="px-5 py-2.5 rounded-2xl bg-white text-neutral-600 text-sm font-semibold whitespace-nowrap hover:bg-neutral-50 hover:scale-105 transition-all touch-manipulation shadow-md">
+              영상
+            </button>
+          </div>
         </div>
       </div>
 
@@ -129,7 +139,7 @@ export default function ContentPage() {
               key={index}
               onClick={() => setActiveIndex(index)}
               className={`h-2 rounded-full transition-all touch-manipulation ${
-                index === activeIndex ? 'w-8 bg-lavender-600' : 'w-2 bg-gray-300'
+                index === activeIndex ? 'w-8 bg-primary-600' : 'w-2 bg-neutral-300'
               }`}
               aria-label={`콘텐츠 ${index + 1}번으로 이동`}
             />
@@ -138,15 +148,15 @@ export default function ContentPage() {
       </div>
 
       {/* Quick Navigation Grid */}
-      <div className="px-4 pb-8">
-        <h3 className="font-semibold text-gray-900 mb-3 text-base sm:text-lg">빠른 탐색</h3>
+      <div className="px-6 pb-8">
+        <h3 className="font-semibold text-neutral-900 mb-3 text-base sm:text-lg">빠른 탐색</h3>
         <div className="grid grid-cols-2 gap-3">
           {mockContents.slice(0, 4).map((content, index) => (
             <button
               key={content.id}
               onClick={() => setActiveIndex(index)}
               className={`bg-white rounded-xl p-3.5 sm:p-4 shadow-sm active:shadow-lg transition-all text-left touch-manipulation ${
-                index === activeIndex ? 'ring-2 ring-lavender-600' : ''
+                index === activeIndex ? 'ring-2 ring-primary-600' : ''
               }`}
             >
               <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${getColor(content.type)} rounded-full flex items-center justify-center text-white mb-2`}>
