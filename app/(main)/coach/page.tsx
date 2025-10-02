@@ -295,10 +295,6 @@ export default function CoachPage() {
               <div className="w-1.5 h-1.5 bg-accent-500 rounded-full"></div>
               <span>{mockAICoaches.length}명 대기중</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
-              <span>24/7 상담 가능</span>
-            </div>
           </div>
         </div>
       </div>

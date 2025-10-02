@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CheckCircle2, TrendingUp, Award, Share2, Plus, X, Loader2 } from 'lucide-react';
+import { CheckCircle2, TrendingUp, Award, Share2, Plus, X, Loader2, Calendar } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, subDays } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -17,6 +17,7 @@ export default function MissionPage() {
   const [missions, setMissions] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [newMissionTitle, setNewMissionTitle] = useState('');
   const [completedDays, setCompletedDays] = useState<Date[]>([]);
 
@@ -165,13 +166,22 @@ export default function MissionPage() {
         <div className="bg-white rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-gray-900">오늘의 미션</h3>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-1 text-sm text-lavender-600 hover:text-lavender-700 font-medium"
-            >
-              <Plus className="w-4 h-4" />
-              추가
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowHistoryModal(true)}
+                className="flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700 font-medium"
+              >
+                <Calendar className="w-4 h-4" />
+                전체보기
+              </button>
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="flex items-center gap-1 text-sm text-lavender-600 hover:text-lavender-700 font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                추가
+              </button>
+            </div>
           </div>
 
           {missions.length === 0 ? (
@@ -303,6 +313,80 @@ export default function MissionPage() {
               >
                 추가
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mission History Modal */}
+      {showHistoryModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-6">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-semibold text-gray-900">미션 히스토리</h3>
+              <button
+                onClick={() => setShowHistoryModal(false)}
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="닫기"
+              >
+                <X className="w-6 h-6 text-gray-400" />
+              </button>
+            </div>
+
+            {/* Past 7 days of missions */}
+            <div className="space-y-4">
+              {Array.from({ length: 7 }).map((_, index) => {
+                const date = subDays(today, index);
+                const isCompleted = completedDays.some(d => isSameDay(d, date));
+
+                return (
+                  <div key={index} className="border border-gray-200 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-primary-600" />
+                        <span className="font-semibold text-gray-900">
+                          {format(date, 'M월 d일 (E)', { locale: ko })}
+                        </span>
+                      </div>
+                      {isCompleted ? (
+                        <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                          완료
+                        </span>
+                      ) : (
+                        <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                          미완료
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      {missions.map((mission) => (
+                        <div
+                          key={mission.id}
+                          className="flex items-center gap-2 text-sm text-gray-700"
+                        >
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                            isCompleted
+                              ? 'bg-mint-500'
+                              : 'bg-gray-200'
+                          }`}>
+                            {isCompleted && <CheckCircle2 className="w-3 h-3 text-white" />}
+                          </div>
+                          <span className={isCompleted ? '' : 'text-gray-400'}>
+                            {mission.title}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {isCompleted && (
+                      <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500">
+                        달성률: {missions.filter(m => m.completed).length}/{missions.length} ({completionRate}%)
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Heart, MessageCircle, Search, TrendingUp, Loader2, Send } from 'lucide-react';
+import { Plus, Heart, MessageCircle, Search, TrendingUp, Loader2, Send, Image as ImageIcon, Smile } from 'lucide-react';
 import { useAuth } from '@/lib/hooks';
 import { getPosts, getPopularPosts, createPost, likePost, getComments, createComment } from '@/lib/firestore';
 import { mockPosts, mockComments } from '@/lib/mockData';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import type { Post, Comment } from '@/types';
 
 const USE_MOCK_DATA = true; // Toggle for demo
@@ -33,9 +35,13 @@ export default function CommunityPage() {
   const [newPostTitle, setNewPostTitle] = useState('');
   const [newPostContent, setNewPostContent] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
 
   // New comment
   const [newComment, setNewComment] = useState('');
+
+  // Like tracking
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadPosts();
@@ -135,15 +141,29 @@ export default function CommunityPage() {
     }
   };
 
-  const handleLikePost = async (postId: string) => {
+  const handleLikePost = async (postId: string, e?: React.MouseEvent) => {
+    e?.stopPropagation(); // Prevent triggering post click
+
     try {
+      const isLiked = likedPosts.has(postId);
+      const newLikedPosts = new Set(likedPosts);
+
+      if (isLiked) {
+        newLikedPosts.delete(postId);
+      } else {
+        newLikedPosts.add(postId);
+      }
+
+      setLikedPosts(newLikedPosts);
+
       if (!USE_MOCK_DATA) {
         await likePost(postId);
       }
 
-      setPosts(posts.map(p => p.id === postId ? { ...p, likes: p.likes + 1 } : p));
+      const delta = isLiked ? -1 : 1;
+      setPosts(posts.map(p => p.id === postId ? { ...p, likes: p.likes + delta } : p));
       if (selectedPost && selectedPost.id === postId) {
-        setSelectedPost({ ...selectedPost, likes: selectedPost.likes + 1 });
+        setSelectedPost({ ...selectedPost, likes: selectedPost.likes + delta });
       }
     } catch (error) {
       console.error('Error liking post:', error);
@@ -207,7 +227,7 @@ export default function CommunityPage() {
                 {categories.find(c => c.id === selectedPost.category)?.label}
               </span>
               <span className="text-xs text-gray-500">
-                {selectedPost.createdAt && new Date(selectedPost.createdAt.toString()).toLocaleDateString('ko-KR')}
+                {selectedPost.createdAt && format(new Date(selectedPost.createdAt.toString()), 'M월 d일', { locale: ko })}
               </span>
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-3">{selectedPost.title}</h2>
@@ -218,11 +238,21 @@ export default function CommunityPage() {
               <span className="text-sm text-gray-500">{selectedPost.authorName}</span>
               <div className="flex items-center gap-4">
                 <button
-                  onClick={() => handleLikePost(selectedPost.id)}
-                  className="flex items-center gap-1 text-gray-500 hover:text-lavender-600 transition-colors"
+                  onClick={(e) => handleLikePost(selectedPost.id, e)}
+                  className={`flex items-center gap-1 transition-all touch-manipulation group ${
+                    likedPosts.has(selectedPost.id)
+                      ? 'text-accent-500'
+                      : 'text-gray-500 hover:text-accent-500'
+                  }`}
                 >
-                  <Heart className="w-5 h-5" />
-                  <span className="text-sm">{selectedPost.likes}</span>
+                  <Heart
+                    className={`w-5 h-5 transition-all ${
+                      likedPosts.has(selectedPost.id)
+                        ? 'fill-accent-500 scale-110'
+                        : 'group-hover:scale-110'
+                    }`}
+                  />
+                  <span className="text-sm font-semibold">{selectedPost.likes}</span>
                 </button>
                 <div className="flex items-center gap-1 text-gray-500">
                   <MessageCircle className="w-5 h-5" />
@@ -251,7 +281,7 @@ export default function CommunityPage() {
                         {comment.authorName}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {comment.createdAt && new Date(comment.createdAt.toString()).toLocaleDateString('ko-KR')}
+                        {comment.createdAt && format(new Date(comment.createdAt.toString()), 'M월 d일', { locale: ko })}
                       </span>
                     </div>
                     <p className="text-gray-700 text-sm">{comment.content}</p>
@@ -317,46 +347,112 @@ export default function CommunityPage() {
           </div>
         </div>
 
-        <div className="px-6 py-6 space-y-4">
-          <select
-            value={newPostCategory}
-            onChange={(e) => setNewPostCategory(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lavender-500 focus:border-transparent"
-            disabled={submitting}
-          >
-            <option value="challenge">챌린지 인증</option>
-            <option value="concern">고민 나눔</option>
-            <option value="info">정보 공유</option>
-            <option value="review">후기</option>
-          </select>
+        <div className="px-6 py-6 space-y-6">
+          {/* Category Selection - Improved */}
+          <div className="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-2xl p-4 border-2 border-primary-200">
+            <label className="text-sm font-semibold text-neutral-700 mb-3 block">카테고리 선택</label>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { value: 'challenge', label: '챌린지 인증', emoji: '🎯' },
+                { value: 'concern', label: '고민 나눔', emoji: '💭' },
+                { value: 'info', label: '정보 공유', emoji: '💡' },
+                { value: 'review', label: '후기', emoji: '⭐' }
+              ].map((cat) => (
+                <button
+                  key={cat.value}
+                  type="button"
+                  onClick={() => setNewPostCategory(cat.value)}
+                  disabled={submitting}
+                  className={`p-3 rounded-xl font-medium text-sm transition-all touch-manipulation ${
+                    newPostCategory === cat.value
+                      ? 'bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg scale-105'
+                      : 'bg-white text-neutral-700 hover:bg-neutral-50 shadow-md'
+                  }`}
+                >
+                  <span className="text-lg mr-2">{cat.emoji}</span>
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
+          {/* Emotion Tags */}
+          <div className="bg-gradient-to-r from-accent-50 to-primary-50 rounded-2xl p-4 border-2 border-accent-200">
+            <label className="text-sm font-semibold text-neutral-700 mb-3 block flex items-center gap-2">
+              <Smile className="w-4 h-4" />
+              지금 기분은 어떠세요?
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: 'happy', emoji: '😊', label: '기쁨' },
+                { id: 'calm', emoji: '😌', label: '평온' },
+                { id: 'anxious', emoji: '😰', label: '불안' },
+                { id: 'sad', emoji: '😢', label: '슬픔' },
+                { id: 'stressed', emoji: '😫', label: '스트레스' },
+                { id: 'hopeful', emoji: '🌟', label: '희망' }
+              ].map((emotion) => (
+                <button
+                  key={emotion.id}
+                  type="button"
+                  onClick={() => setSelectedEmotion(selectedEmotion === emotion.id ? null : emotion.id)}
+                  disabled={submitting}
+                  className={`px-4 py-2 rounded-xl font-medium text-sm transition-all touch-manipulation ${
+                    selectedEmotion === emotion.id
+                      ? 'bg-gradient-to-r from-accent-500 to-primary-500 text-white shadow-lg scale-105'
+                      : 'bg-white text-neutral-700 hover:bg-neutral-50 shadow-sm'
+                  }`}
+                >
+                  <span className="text-lg mr-1">{emotion.emoji}</span>
+                  {emotion.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Title */}
           <input
             type="text"
             value={newPostTitle}
             onChange={(e) => setNewPostTitle(e.target.value)}
-            placeholder="제목"
-            className="w-full text-xl font-semibold border-0 border-b-2 border-gray-200 focus:border-lavender-600 focus:ring-0 pb-2"
+            placeholder="제목을 입력하세요"
+            className="w-full text-xl font-semibold border-0 border-b-2 border-gray-200 focus:border-primary-600 focus:ring-0 pb-3 px-2"
             disabled={submitting}
           />
 
+          {/* Content */}
           <textarea
             value={newPostContent}
             onChange={(e) => setNewPostContent(e.target.value)}
             placeholder="내용을 입력하세요..."
-            className="w-full h-64 border-0 focus:ring-0 resize-none text-gray-700"
+            className="w-full h-64 border-0 focus:ring-0 resize-none text-gray-700 px-2"
             disabled={submitting}
           />
 
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={isAnonymous}
-              onChange={(e) => setIsAnonymous(e.target.checked)}
-              className="w-5 h-5 rounded border-gray-300 text-lavender-600 focus:ring-lavender-500"
+          {/* Image Upload Placeholder */}
+          <div className="bg-neutral-50 rounded-2xl p-6 border-2 border-dashed border-neutral-300 hover:border-primary-400 transition-colors">
+            <button
+              type="button"
+              className="w-full flex flex-col items-center gap-2 text-neutral-500 hover:text-primary-600 transition-colors touch-manipulation"
               disabled={submitting}
-            />
-            <span className="text-sm text-gray-700">익명으로 작성</span>
-          </label>
+            >
+              <ImageIcon className="w-8 h-8" />
+              <span className="text-sm font-medium">이미지 추가 (준비 중)</span>
+            </button>
+          </div>
+
+          {/* Options */}
+          <div className="flex items-center justify-between">
+            <label className="flex items-center gap-3 cursor-pointer touch-manipulation">
+              <input
+                type="checkbox"
+                checked={isAnonymous}
+                onChange={(e) => setIsAnonymous(e.target.checked)}
+                className="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                disabled={submitting}
+              />
+              <span className="text-sm text-gray-700 font-medium">익명으로 작성</span>
+            </label>
+          </div>
         </div>
       </div>
     );
@@ -371,7 +467,7 @@ export default function CommunityPage() {
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary-400/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
 
         <div className="relative">
-          <h1 className="text-3xl font-bold mb-2 tracking-tight">마음 라운지</h1>
+          <h1 className="text-3xl font-bold mb-2 tracking-tight">커뮤니티</h1>
           <p className="text-white/80 text-base font-medium">함께 나누고 성장하는 공간</p>
         </div>
       </div>
@@ -392,14 +488,14 @@ export default function CommunityPage() {
         </div>
       </div>
 
-      {/* Category Pills */}
+      {/* Category Pills - Improved Scroll */}
       <div className="px-6 mb-6">
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-6 px-6">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setActiveCategory(category.id)}
-              className={`px-5 py-2.5 rounded-2xl font-semibold text-sm whitespace-nowrap transition-all touch-manipulation ${
+              className={`px-5 py-2.5 rounded-2xl font-semibold text-sm whitespace-nowrap transition-all touch-manipulation flex-shrink-0 ${
                 activeCategory === category.id
                   ? 'bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg shadow-primary-500/30 scale-105'
                   : 'bg-white text-neutral-600 hover:bg-neutral-50 hover:scale-105 shadow-md'
@@ -468,7 +564,7 @@ export default function CommunityPage() {
                   {categories.find(c => c.id === post.category)?.label}
                 </span>
                 <span className="text-xs text-neutral-400 font-medium">
-                  {post.createdAt && new Date(post.createdAt.toString()).toLocaleDateString('ko-KR')}
+                  {post.createdAt && format(new Date(post.createdAt.toString()), 'M월 d일', { locale: ko })}
                 </span>
               </div>
               <h3 className="font-bold text-neutral-900 mb-2 text-lg tracking-tight group-hover:text-primary-600 transition-colors">{post.title}</h3>
@@ -476,10 +572,23 @@ export default function CommunityPage() {
               <div className="flex items-center justify-between pt-3 border-t border-neutral-100">
                 <span className="text-sm text-neutral-500 font-medium truncate max-w-[160px]">{post.authorName}</span>
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5 text-neutral-500">
-                    <Heart className="w-4 h-4" />
+                  <button
+                    onClick={(e) => handleLikePost(post.id, e)}
+                    className={`flex items-center gap-1.5 transition-all touch-manipulation group/like ${
+                      likedPosts.has(post.id)
+                        ? 'text-accent-500'
+                        : 'text-neutral-500 hover:text-accent-500'
+                    }`}
+                  >
+                    <Heart
+                      className={`w-4 h-4 transition-all ${
+                        likedPosts.has(post.id)
+                          ? 'fill-accent-500 scale-110'
+                          : 'group-hover/like:scale-110'
+                      }`}
+                    />
                     <span className="text-sm font-semibold">{post.likes}</span>
-                  </div>
+                  </button>
                   <div className="flex items-center gap-1.5 text-neutral-500">
                     <MessageCircle className="w-4 h-4" />
                     <span className="text-sm font-semibold">{post.comments}</span>

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Trophy, FileText, Bookmark, Bell, HelpCircle, FileCheck, LogOut, ChevronRight, Settings, Loader2, Edit } from 'lucide-react';
 import { useAuth } from '@/lib/hooks';
 import { updateUserProfile } from '@/lib/firestore';
+import { mockPosts } from '@/lib/mockData';
 
 export default function MyPage() {
   const router = useRouter();
@@ -14,6 +15,9 @@ export default function MyPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editName, setEditName] = useState('');
   const [updating, setUpdating] = useState(false);
+
+  // Count user's posts
+  const userPostsCount = mockPosts.filter(p => p.userId === (user?.uid || 'mock-user-1')).length;
 
   const handleLogout = async () => {
     if (confirm('로그아웃 하시겠습니까?')) {
@@ -51,31 +55,31 @@ export default function MyPage() {
     {
       icon: FileText,
       label: '내가 작성한 글',
-      count: 0,
+      count: userPostsCount,
       color: 'text-primary-600 bg-gradient-to-br from-primary-100 to-primary-200',
-      onClick: () => {},
+      onClick: () => router.push('/community'),
     },
     {
       icon: Bookmark,
       label: '저장한 글',
       count: 0,
       color: 'text-accent-600 bg-gradient-to-br from-accent-100 to-accent-200',
-      onClick: () => {},
+      onClick: () => alert('저장 기능은 준비 중입니다'),
     },
     {
       icon: Trophy,
       label: '획득한 트로피',
       count: 1,
       color: 'text-yellow-600 bg-gradient-to-br from-yellow-100 to-orange-100',
-      onClick: () => {},
+      onClick: () => alert('트로피 기능은 준비 중입니다'),
     },
   ];
 
   const settingItems = [
-    { icon: Bell, label: '알림 설정', onClick: () => {} },
+    { icon: Bell, label: '알림 설정', onClick: () => alert('알림 설정 기능은 준비 중입니다') },
     { icon: HelpCircle, label: 'FAQ', onClick: () => router.push('/faq') },
     { icon: FileCheck, label: '공지사항', onClick: () => router.push('/notice') },
-    { icon: Settings, label: '서비스 약관', onClick: () => {} },
+    { icon: Settings, label: '서비스 약관', onClick: () => alert('서비스 약관 페이지는 준비 중입니다') },
   ];
 
   if (loading) {
