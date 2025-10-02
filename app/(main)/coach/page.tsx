@@ -272,9 +272,9 @@ export default function CoachPage() {
             {mockAICoaches.map((coach) => (
               <button
                 key={coach.id}
-                onClick={() => router.push('/coach/new')}
+                onClick={() => router.push(`/coach/chat?coachId=${coach.id}`)}
                 className="flex flex-col items-center gap-2 p-3 rounded-xl bg-sage-50 hover:bg-sage-100 active:bg-sage-200 transition-colors touch-manipulation"
-                aria-label={`${coach.name} 코치 선택`}
+                aria-label={`${coach.name} 코치와 대화하기`}
               >
                 {/* Avatar */}
                 <div className="relative w-14 h-14 bg-white rounded-xl flex items-center justify-center text-3xl shadow-sm">
