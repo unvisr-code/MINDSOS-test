@@ -41,14 +41,12 @@ export default function HomePage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && user && userProfile) {
+    if (!authLoading && userProfile) {
       loadData();
     }
-  }, [authLoading, user, userProfile]);
+  }, [authLoading, userProfile]);
 
   const loadData = async () => {
-    if (!user) return;
-
     try {
       setLoading(true);
 
@@ -58,6 +56,8 @@ export default function HomePage() {
         setTodayQuote(mockQuotes[0]);
         setSelectedEmotion('happy');
       } else {
+        if (!user) return;
+
         // Load from Firebase
         const checkIn = await getTodayCheckIn(user.uid);
         if (checkIn?.emotion) {
@@ -83,19 +83,21 @@ export default function HomePage() {
   };
 
   const handleEmotionSelect = async (emotion: typeof selectedEmotion) => {
-    if (!user || !emotion) return;
+    if (!emotion) return;
 
     setSelectedEmotion(emotion);
 
-    try {
-      await saveDailyCheckIn(user.uid, {
-        emotion,
-        stress: 3,
-        energy: 3,
-        sleep: 7,
-      });
-    } catch (error) {
-      console.error('Error saving check-in:', error);
+    if (!USE_MOCK_DATA && user) {
+      try {
+        await saveDailyCheckIn(user.uid, {
+          emotion,
+          stress: 3,
+          energy: 3,
+          sleep: 7,
+        });
+      } catch (error) {
+        console.error('Error saving check-in:', error);
+      }
     }
   };
 
@@ -111,12 +113,18 @@ export default function HomePage() {
   };
 
   const handleSaveDiary = async () => {
-    if (!user || !diary.trim()) return;
+    if (!diary.trim() || !diaryEmotion) return;
 
     try {
       setSaving(true);
-      await saveDiary(user.uid, diary);
+
+      if (!USE_MOCK_DATA && user) {
+        await saveDiary(user.uid, diary);
+      }
+
       alert('일기가 저장되었습니다!');
+      setDiary('');
+      setDiaryEmotion('');
     } catch (error) {
       console.error('Error saving diary:', error);
       alert('일기 저장에 실패했습니다.');
@@ -149,32 +157,32 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 pt-12 pb-8">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-bold">안녕하세요, {userProfile?.displayName}님!</h1>
-            <p className="text-indigo-100 mt-1">오늘도 함께 해요 ✨</p>
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 sm:px-6 pt-safe pt-8 sm:pt-12 pb-6 sm:pb-8">
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <div className="flex-1 min-w-0 pr-3">
+            <h1 className="text-xl sm:text-2xl font-bold truncate">안녕하세요, {userProfile?.displayName}님!</h1>
+            <p className="text-indigo-100 mt-1 text-sm sm:text-base">오늘도 함께 해요 ✨</p>
           </div>
-          <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
-            <Trophy className="w-5 h-5" />
-            <span className="font-bold">{userProfile?.streak || 0}일</span>
+          <div className="flex items-center gap-2 bg-white/20 px-3 sm:px-4 py-2 rounded-full flex-shrink-0">
+            <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="font-bold text-sm sm:text-base">{userProfile?.streak || 0}일</span>
           </div>
         </div>
 
         {/* 출석 체크 */}
         <button
           onClick={() => router.push('/attendance')}
-          className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 w-full text-left hover:bg-white/20 transition-colors touch-manipulation active:scale-[0.98]"
+          className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 w-full text-left hover:bg-white/20 active:bg-white/30 transition-colors touch-manipulation active:scale-[0.98]"
         >
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold">오늘의 출석</h3>
-            <span className="text-sm text-indigo-100">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <h3 className="font-semibold text-sm sm:text-base">오늘의 출석</h3>
+            <span className="text-xs sm:text-sm text-indigo-100">
               {format(new Date(), 'yyyy년 M월 d일', { locale: ko })}
             </span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 sm:gap-2">
             {[1, 2, 3, 4, 5, 6, 7].map((day) => (
               <div
                 key={day}
@@ -187,33 +195,31 @@ export default function HomePage() {
         </button>
       </div>
 
-      <div className="px-6 py-6 space-y-6">
+      <div className="px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
         {/* 오늘의 명언 */}
         {todayQuote.text && (
-          <div className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-2xl p-6 shadow-lg">
-            <div className="flex items-start justify-between mb-4">
-              <Sparkles className="w-6 h-6" />
-              <div className="flex gap-2">
-                <button
-                  onClick={handleShareQuote}
-                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
-                >
-                  <Share2 className="w-5 h-5" />
-                </button>
-              </div>
+          <div className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg">
+            <div className="flex items-start justify-between mb-3 sm:mb-4">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
+              <button
+                onClick={handleShareQuote}
+                className="p-2 hover:bg-white/10 active:bg-white/20 rounded-full transition-colors touch-manipulation"
+              >
+                <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
             </div>
-            <p className="text-lg font-medium leading-relaxed mb-3">{todayQuote.text}</p>
-            <p className="text-purple-100 text-sm">- {todayQuote.author}</p>
+            <p className="text-base sm:text-lg font-medium leading-relaxed mb-2 sm:mb-3">{todayQuote.text}</p>
+            <p className="text-purple-100 text-xs sm:text-sm">- {todayQuote.author}</p>
           </div>
         )}
 
         {/* 오늘의 미션 */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">오늘의 미션</h3>
+        <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h3 className="font-semibold text-gray-900 text-sm sm:text-base">오늘의 미션</h3>
             <button
               onClick={() => router.push('/mission')}
-              className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+              className="text-xs sm:text-sm text-indigo-600 hover:text-indigo-700 active:text-indigo-800 font-medium touch-manipulation px-2 py-1"
             >
               수정하기
             </button>
@@ -223,23 +229,23 @@ export default function HomePage() {
               미션을 추가해보세요!
             </p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {missions.slice(0, 3).map((mission) => (
                 <div
                   key={mission.id}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors touch-manipulation"
                 >
                   <button
                     onClick={() => toggleMission(mission.id, mission.completed)}
-                    className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                    className={`flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 flex items-center justify-center transition-all touch-manipulation ${
                       mission.completed
                         ? 'bg-indigo-600 border-indigo-600'
-                        : 'border-gray-300 hover:border-indigo-400'
+                        : 'border-gray-300 hover:border-indigo-400 active:border-indigo-500'
                     }`}
                   >
-                    {mission.completed && <CheckCircle2 className="w-4 h-4 text-white" />}
+                    {mission.completed && <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />}
                   </button>
-                  <span className={`flex-1 ${mission.completed ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+                  <span className={`flex-1 text-sm sm:text-base ${mission.completed ? 'line-through text-gray-400' : 'text-gray-700'}`}>
                     {mission.title}
                   </span>
                 </div>
@@ -248,39 +254,39 @@ export default function HomePage() {
           )}
           <button
             onClick={() => router.push('/mission')}
-            className="mt-4 w-full text-indigo-600 text-sm font-medium hover:text-indigo-700 flex items-center justify-center gap-1"
+            className="mt-3 sm:mt-4 w-full text-indigo-600 text-xs sm:text-sm font-medium hover:text-indigo-700 active:text-indigo-800 flex items-center justify-center gap-1 py-2 touch-manipulation"
           >
             미션 상세보기 <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
         {/* 한 줄 일기 */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">한 줄 일기</h3>
+        <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h3 className="font-semibold text-gray-900 text-sm sm:text-base">한 줄 일기</h3>
             <button
               onClick={() => router.push('/diary')}
-              className="text-sm text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1"
+              className="text-xs sm:text-sm text-indigo-600 hover:text-indigo-700 active:text-indigo-800 font-medium flex items-center gap-1 touch-manipulation px-2 py-1"
             >
               전체보기 <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
           {/* 일기 기분 선택 */}
-          <div className="mb-4">
-            <p className="text-sm text-gray-600 mb-3">오늘의 기분</p>
-            <div className="flex gap-2 justify-center">
+          <div className="mb-3 sm:mb-4">
+            <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3">오늘의 기분</p>
+            <div className="flex gap-1.5 sm:gap-2 justify-center">
               {emotions.map((emotion) => (
                 <button
                   key={emotion.value}
                   onClick={() => setDiaryEmotion(emotion.value)}
-                  className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all ${
+                  className={`flex flex-col items-center gap-1 p-2 sm:p-2.5 rounded-lg transition-all touch-manipulation min-w-[48px] ${
                     diaryEmotion === emotion.value
                       ? 'bg-indigo-100 scale-110'
-                      : 'bg-gray-50 hover:bg-gray-100'
+                      : 'bg-gray-50 hover:bg-gray-100 active:bg-gray-200'
                   }`}
                 >
-                  <span className="text-2xl">{emotion.emoji}</span>
+                  <span className="text-xl sm:text-2xl">{emotion.emoji}</span>
                 </button>
               ))}
             </div>
@@ -290,33 +296,33 @@ export default function HomePage() {
             value={diary}
             onChange={(e) => setDiary(e.target.value)}
             placeholder="오늘 하루는 어땠나요? 자유롭게 적어보세요..."
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm sm:text-base"
             rows={3}
           />
           <button
             onClick={handleSaveDiary}
             disabled={!diary.trim() || !diaryEmotion || saving}
-            className="mt-3 w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-3 w-full bg-indigo-600 text-white py-3 sm:py-3.5 rounded-lg sm:rounded-xl font-medium hover:bg-indigo-700 active:bg-indigo-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation text-sm sm:text-base"
           >
             {saving ? '저장 중...' : '저장하기'}
           </button>
         </div>
 
         {/* AI 코치 바로가기 */}
-        <div
+        <button
           onClick={() => router.push('/coach')}
-          className="bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-2xl p-6 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
+          className="w-full bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl active:shadow-md transition-all touch-manipulation active:scale-[0.98]"
         >
           <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-lg mb-1">AI 코치와 대화하기</h3>
-              <p className="text-pink-100 text-sm">고민이 있으신가요? 편지를 써보세요</p>
+            <div className="text-left flex-1 min-w-0 pr-3">
+              <h3 className="font-semibold text-base sm:text-lg mb-1">AI 코치와 대화하기</h3>
+              <p className="text-pink-100 text-xs sm:text-sm">고민이 있으신가요? 편지를 써보세요</p>
             </div>
-            <button className="bg-white text-pink-600 p-3 rounded-full hover:scale-110 transition-transform">
-              <ChevronRight className="w-6 h-6" />
-            </button>
+            <div className="bg-white text-pink-600 p-2.5 sm:p-3 rounded-full hover:scale-110 active:scale-105 transition-transform flex-shrink-0">
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+            </div>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   );
