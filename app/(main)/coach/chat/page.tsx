@@ -122,27 +122,27 @@ export default function ChatPage() {
   return (
     <div className="h-screen bg-gray-100 flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 shadow-sm z-10">
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 shadow-sm z-10 pt-safe">
         <div className="flex items-center justify-between max-w-3xl mx-auto">
           <button
             onClick={() => router.back()}
-            className="p-1.5 active:bg-gray-100 rounded-lg touch-manipulation"
+            className="p-2 active:bg-gray-100 rounded-lg touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center -ml-2"
             aria-label="뒤로 가기"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
           </button>
-          <div className="flex items-center gap-2">
-            <div className={`w-8 h-8 bg-gradient-to-br ${selectedCoach.color} rounded-full flex items-center justify-center text-lg`}>
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 justify-center">
+            <div className={`w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br ${selectedCoach.color} rounded-full flex items-center justify-center text-xl sm:text-2xl flex-shrink-0`}>
               {selectedCoach.emoji}
             </div>
-            <div>
-              <h2 className="font-semibold text-sm text-gray-900">{selectedCoach.name}</h2>
-              <p className="text-xs text-gray-500">{selectedCoach.personality}</p>
+            <div className="min-w-0">
+              <h2 className="font-semibold text-sm sm:text-base text-gray-900 truncate">{selectedCoach.name}</h2>
+              <p className="text-xs sm:text-sm text-gray-500 truncate">{selectedCoach.personality}</p>
             </div>
           </div>
           <button
             onClick={() => setShowCoachModal(true)}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100 active:bg-gray-200 transition-colors touch-manipulation border border-gray-300"
+            className="px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-100 active:bg-gray-200 transition-colors touch-manipulation border border-gray-300 whitespace-nowrap min-h-[44px]"
           >
             변경
           </button>
@@ -150,36 +150,36 @@ export default function ChatPage() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-3xl mx-auto space-y-4 pb-32">
+      <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 sm:py-6">
+        <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4 pb-32">
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} items-start gap-2`}
+              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} items-start gap-2 sm:gap-3`}
             >
               {message.role === 'ai' && (
-                <div className={`w-8 h-8 bg-gradient-to-br ${selectedCoach.color} rounded-full flex items-center justify-center text-lg flex-shrink-0`}>
+                <div className={`w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br ${selectedCoach.color} rounded-full flex items-center justify-center text-lg sm:text-xl flex-shrink-0`}>
                   {selectedCoach.emoji}
                 </div>
               )}
               <div
-                className={`max-w-[75%] sm:max-w-[70%] rounded-2xl px-4 py-3 ${
+                className={`max-w-[80%] sm:max-w-[75%] md:max-w-[70%] rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 ${
                   message.role === 'user'
                     ? 'bg-indigo-600 text-white'
-                    : 'bg-white text-gray-900 border border-gray-200'
+                    : 'bg-white text-gray-900 border border-gray-200 shadow-sm'
                 }`}
               >
-                <p className="leading-relaxed text-[15px] break-words whitespace-pre-wrap">{message.content}</p>
+                <p className="leading-relaxed text-sm sm:text-base break-words whitespace-pre-wrap">{message.content}</p>
               </div>
             </div>
           ))}
 
           {isTyping && (
-            <div className="flex justify-start items-start gap-2">
-              <div className={`w-8 h-8 bg-gradient-to-br ${selectedCoach.color} rounded-full flex items-center justify-center text-lg flex-shrink-0`}>
+            <div className="flex justify-start items-start gap-2 sm:gap-3">
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br ${selectedCoach.color} rounded-full flex items-center justify-center text-lg sm:text-xl flex-shrink-0`}>
                 {selectedCoach.emoji}
               </div>
-              <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
+              <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm">
                 <div className="flex gap-1">
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -193,21 +193,22 @@ export default function ChatPage() {
       </div>
 
       {/* Input - Fixed above bottom nav */}
-      <div className="fixed bottom-16 sm:bottom-20 left-0 right-0 bg-white border-t border-gray-200 shadow-lg px-4 py-4 z-30">
-        <div className="flex gap-3 max-w-3xl mx-auto">
+      <div className="fixed bottom-16 sm:bottom-20 left-0 right-0 bg-white border-t border-gray-200 shadow-lg px-3 sm:px-4 py-3 sm:py-4 z-30 pb-safe">
+        <div className="flex gap-2 sm:gap-3 max-w-3xl mx-auto">
           <input
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
             placeholder="메시지를 입력하세요..."
-            className="flex-1 px-4 py-3 text-[15px] bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-colors"
+            className="flex-1 px-3 sm:px-4 py-3 text-base bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-colors"
+            style={{ fontSize: '16px' }}
             disabled={isTyping}
           />
           <button
             onClick={handleSendMessage}
             disabled={!inputMessage.trim() || isTyping}
-            className="px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 active:bg-indigo-800 transition-colors disabled:opacity-50 disabled:bg-gray-400 flex items-center justify-center touch-manipulation min-w-[48px]"
+            className="px-3 sm:px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 active:bg-indigo-800 transition-colors disabled:opacity-50 disabled:bg-gray-400 flex items-center justify-center touch-manipulation min-w-[48px] min-h-[48px]"
             aria-label="메시지 전송"
           >
             <Send className="w-5 h-5" />
@@ -217,37 +218,37 @@ export default function ChatPage() {
 
       {/* Coach Selection Modal */}
       {showCoachModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4 sm:px-6">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4 sm:px-6 p-safe">
           <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-md max-h-[85vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-semibold text-gray-900">AI 코치 선택</h3>
+            <div className="flex items-center justify-between mb-4 sm:mb-5">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">AI 코치 선택</h3>
               <button
                 onClick={() => setShowCoachModal(false)}
-                className="p-1 active:bg-gray-100 rounded-full touch-manipulation"
+                className="p-2 active:bg-gray-100 rounded-full touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center -mr-2"
                 aria-label="닫기"
               >
-                <X className="w-6 h-6 text-gray-400" />
+                <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
               </button>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {mockAICoaches.map((coach) => (
                 <button
                   key={coach.id}
                   onClick={() => handleCoachSelect(coach)}
-                  className={`w-full p-4 rounded-xl border-2 transition-all touch-manipulation active:scale-[0.98] ${
+                  className={`w-full p-3 sm:p-4 rounded-xl border-2 transition-all touch-manipulation active:scale-[0.98] ${
                     selectedCoach.id === coach.id
                       ? 'border-indigo-600 bg-indigo-50'
-                      : 'border-gray-200 active:border-gray-300'
+                      : 'border-gray-200 hover:border-gray-300 active:border-gray-400'
                   }`}
                 >
                   <div className="flex items-center gap-3 sm:gap-4">
-                    <div className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${coach.color} rounded-full flex items-center justify-center text-2xl sm:text-3xl flex-shrink-0`}>
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${coach.color} rounded-full flex items-center justify-center text-xl sm:text-2xl flex-shrink-0`}>
                       {coach.emoji}
                     </div>
                     <div className="flex-1 text-left min-w-0">
                       <h4 className="font-semibold text-gray-900 text-sm sm:text-base">{coach.name}</h4>
-                      <p className="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1">{coach.personality}</p>
-                      <p className="text-xs text-gray-400 mt-0.5 sm:mt-1 line-clamp-2">{coach.description}</p>
+                      <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{coach.personality}</p>
+                      <p className="text-xs text-gray-400 mt-1 line-clamp-2">{coach.description}</p>
                     </div>
                   </div>
                 </button>

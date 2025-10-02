@@ -38,10 +38,8 @@ export default function CommunityPage() {
   const [newComment, setNewComment] = useState('');
 
   useEffect(() => {
-    if (user) {
-      loadPosts();
-    }
-  }, [user, activeTab, activeCategory]);
+    loadPosts();
+  }, [activeTab, activeCategory]);
 
   useEffect(() => {
     if (selectedPost) {
@@ -101,26 +99,34 @@ export default function CommunityPage() {
   };
 
   const handleCreatePost = async () => {
-    if (!user || !userProfile || !newPostTitle.trim() || !newPostContent.trim()) return;
+    if (!newPostTitle.trim() || !newPostContent.trim()) return;
 
     try {
       setSubmitting(true);
-      await createPost(
-        user.uid,
-        isAnonymous ? '익명' : userProfile.displayName,
-        {
-          category: newPostCategory as any,
-          title: newPostTitle,
-          content: newPostContent,
-          isAnonymous,
-        }
-      );
+
+      if (!USE_MOCK_DATA && user && userProfile) {
+        await createPost(
+          user.uid,
+          isAnonymous ? '익명' : userProfile.displayName,
+          {
+            category: newPostCategory as any,
+            title: newPostTitle,
+            content: newPostContent,
+            isAnonymous,
+          }
+        );
+      }
 
       setShowNewPost(false);
       setNewPostTitle('');
       setNewPostContent('');
       setIsAnonymous(false);
-      loadPosts();
+
+      if (USE_MOCK_DATA) {
+        alert('게시글이 작성되었습니다! (데모 모드)');
+      } else {
+        loadPosts();
+      }
     } catch (error) {
       console.error('Error creating post:', error);
       alert('게시글 작성에 실패했습니다.');
@@ -131,7 +137,10 @@ export default function CommunityPage() {
 
   const handleLikePost = async (postId: string) => {
     try {
-      await likePost(postId);
+      if (!USE_MOCK_DATA) {
+        await likePost(postId);
+      }
+
       setPosts(posts.map(p => p.id === postId ? { ...p, likes: p.likes + 1 } : p));
       if (selectedPost && selectedPost.id === postId) {
         setSelectedPost({ ...selectedPost, likes: selectedPost.likes + 1 });
@@ -142,25 +151,32 @@ export default function CommunityPage() {
   };
 
   const handleCreateComment = async () => {
-    if (!user || !userProfile || !selectedPost || !newComment.trim()) return;
+    if (!selectedPost || !newComment.trim()) return;
 
     try {
-      await createComment({
-        postId: selectedPost.id,
-        userId: user.uid,
-        authorName: isAnonymous ? '익명' : userProfile.displayName,
-        content: newComment,
-        isAnonymous,
-      });
+      if (!USE_MOCK_DATA && user && userProfile) {
+        await createComment({
+          postId: selectedPost.id,
+          userId: user.uid,
+          authorName: isAnonymous ? '익명' : userProfile.displayName,
+          content: newComment,
+          isAnonymous,
+        });
+      }
 
       setNewComment('');
-      loadComments(selectedPost.id);
 
-      // Update comment count
-      setPosts(posts.map(p =>
-        p.id === selectedPost.id ? { ...p, comments: p.comments + 1 } : p
-      ));
-      setSelectedPost({ ...selectedPost, comments: selectedPost.comments + 1 });
+      if (USE_MOCK_DATA) {
+        // In mock mode, just show success message
+        alert('댓글이 작성되었습니다! (데모 모드)');
+      } else {
+        loadComments(selectedPost.id);
+        // Update comment count
+        setPosts(posts.map(p =>
+          p.id === selectedPost.id ? { ...p, comments: p.comments + 1 } : p
+        ));
+        setSelectedPost({ ...selectedPost, comments: selectedPost.comments + 1 });
+      }
     } catch (error) {
       console.error('Error creating comment:', error);
     }
@@ -347,36 +363,36 @@ export default function CommunityPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-pink-600 to-orange-600 text-white px-6 pt-12 pb-6">
-        <h1 className="text-2xl font-bold mb-2">마음 라운지</h1>
-        <p className="text-pink-100">함께 나누고 성장해요</p>
+      <div className="bg-gradient-to-r from-pink-600 to-orange-600 text-white px-4 sm:px-6 pt-safe pt-8 sm:pt-12 pb-4 sm:pb-6">
+        <h1 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">마음 라운지</h1>
+        <p className="text-pink-100 text-sm sm:text-base">함께 나누고 성장해요</p>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white px-6 py-4 border-b border-gray-200">
-        <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2">
-          <Search className="w-5 h-5 text-gray-400" />
+      <div className="bg-white px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+        <div className="flex items-center gap-2 bg-gray-100 rounded-full px-3 sm:px-4 py-2">
+          <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
           <input
             type="text"
             placeholder="검색어를 입력하세요"
-            className="flex-1 bg-transparent border-0 focus:ring-0 text-sm"
+            className="flex-1 bg-transparent border-0 focus:ring-0 text-xs sm:text-sm"
           />
         </div>
       </div>
 
       {/* Categories */}
-      <div className="bg-white border-b border-gray-200 px-6 py-3 overflow-x-auto">
-        <div className="flex gap-2">
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-2 sm:py-3 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-1.5 sm:gap-2">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setActiveCategory(category.id)}
-              className={`px-4 py-2 rounded-full font-medium text-sm whitespace-nowrap transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-medium text-xs sm:text-sm whitespace-nowrap transition-colors touch-manipulation ${
                 activeCategory === category.id
                   ? 'bg-pink-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 active:bg-gray-300'
               }`}
             >
               {category.label}
@@ -387,13 +403,13 @@ export default function CommunityPage() {
 
       {/* Tabs */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="flex px-6">
+        <div className="flex px-4 sm:px-6">
           <button
             onClick={() => setActiveTab('popular')}
-            className={`flex-1 py-4 text-center font-medium transition-colors flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 sm:py-4 text-center font-medium transition-colors flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base touch-manipulation ${
               activeTab === 'popular'
                 ? 'text-pink-600 border-b-2 border-pink-600'
-                : 'text-gray-500 hover:text-gray-700'
+                : 'text-gray-500 hover:text-gray-700 active:text-gray-900'
             }`}
           >
             <TrendingUp className="w-4 h-4" />
@@ -401,10 +417,10 @@ export default function CommunityPage() {
           </button>
           <button
             onClick={() => setActiveTab('recent')}
-            className={`flex-1 py-4 text-center font-medium transition-colors ${
+            className={`flex-1 py-3 sm:py-4 text-center font-medium transition-colors text-sm sm:text-base touch-manipulation ${
               activeTab === 'recent'
                 ? 'text-pink-600 border-b-2 border-pink-600'
-                : 'text-gray-500 hover:text-gray-700'
+                : 'text-gray-500 hover:text-gray-700 active:text-gray-900'
             }`}
           >
             최신글
@@ -413,43 +429,43 @@ export default function CommunityPage() {
       </div>
 
       {/* Posts List */}
-      <div className="px-6 py-6 space-y-4">
+      <div className="px-4 sm:px-6 py-4 sm:py-6 space-y-3 sm:space-y-4">
         {loading ? (
           <div className="text-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-pink-600 mx-auto" />
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">게시글이 없습니다</p>
-            <p className="text-sm text-gray-400 mt-2">첫 게시글을 작성해보세요</p>
+            <p className="text-gray-500 text-sm sm:text-base">게시글이 없습니다</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-2">첫 게시글을 작성해보세요</p>
           </div>
         ) : (
           posts.map((post) => (
             <div
               key={post.id}
               onClick={() => setSelectedPost(post)}
-              className="bg-white rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+              className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md active:shadow-lg transition-all cursor-pointer touch-manipulation active:scale-[0.98]"
             >
-              <div className="flex items-start justify-between mb-3">
-                <span className="inline-block px-3 py-1 bg-pink-100 text-pink-700 text-xs font-medium rounded-full">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <span className="inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 bg-pink-100 text-pink-700 text-xs font-medium rounded-full">
                   {categories.find(c => c.id === post.category)?.label}
                 </span>
                 <span className="text-xs text-gray-500">
                   {post.createdAt && new Date(post.createdAt.toString()).toLocaleDateString('ko-KR')}
                 </span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">{post.title}</h3>
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">{post.content}</p>
+              <h3 className="font-semibold text-gray-900 mb-1.5 sm:mb-2 text-sm sm:text-base">{post.title}</h3>
+              <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{post.content}</p>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">{post.authorName}</span>
-                <div className="flex items-center gap-4">
+                <span className="text-xs sm:text-sm text-gray-500 truncate max-w-[120px] sm:max-w-none">{post.authorName}</span>
+                <div className="flex items-center gap-3 sm:gap-4">
                   <div className="flex items-center gap-1 text-gray-500">
-                    <Heart className="w-4 h-4" />
-                    <span className="text-sm">{post.likes}</span>
+                    <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span className="text-xs sm:text-sm">{post.likes}</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-500">
-                    <MessageCircle className="w-4 h-4" />
-                    <span className="text-sm">{post.comments}</span>
+                    <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span className="text-xs sm:text-sm">{post.comments}</span>
                   </div>
                 </div>
               </div>
@@ -461,9 +477,9 @@ export default function CommunityPage() {
       {/* Floating Action Button */}
       <button
         onClick={() => setShowNewPost(true)}
-        className="fixed bottom-24 right-6 w-14 h-14 bg-gradient-to-r from-pink-600 to-orange-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center hover:scale-110"
+        className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-pink-600 to-orange-600 text-white rounded-full shadow-lg hover:shadow-xl active:shadow-md transition-all flex items-center justify-center hover:scale-110 active:scale-95 touch-manipulation z-40"
       >
-        <Plus className="w-6 h-6" />
+        <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
       </button>
     </div>
   );
