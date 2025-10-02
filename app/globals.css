@@ -1,5 +1,146 @@
 @import "tailwindcss";
 
+@theme {
+  /* Modern Healing Color System 2024 - 현대적 치유 테마 */
+
+  /* Primary: Soft Lavender - 차분하고 현대적인 보라 (Headspace, Calm 스타일) */
+  --color-primary-50: #f7f5ff;
+  --color-primary-100: #ede9fe;
+  --color-primary-200: #ddd6fe;
+  --color-primary-300: #c4b5fd;
+  --color-primary-400: #a78bfa;
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
+  --color-primary-800: #5b21b6;
+  --color-primary-900: #4c1d95;
+
+  /* Secondary: Soft Teal - 신선하고 모던한 청록 */
+  --color-secondary-50: #f0fdfa;
+  --color-secondary-100: #ccfbf1;
+  --color-secondary-200: #99f6e4;
+  --color-secondary-300: #5eead4;
+  --color-secondary-400: #2dd4bf;
+  --color-secondary-500: #14b8a6;
+  --color-secondary-600: #0d9488;
+  --color-secondary-700: #0f766e;
+  --color-secondary-800: #115e59;
+  --color-secondary-900: #134e4a;
+
+  /* Accent: Warm Pink - 긍정적이고 따뜻한 핑크 */
+  --color-accent-50: #fdf2f8;
+  --color-accent-100: #fce7f3;
+  --color-accent-200: #fbcfe8;
+  --color-accent-300: #f9a8d4;
+  --color-accent-400: #f472b6;
+  --color-accent-500: #ec4899;
+  --color-accent-600: #db2777;
+  --color-accent-700: #be185d;
+  --color-accent-800: #9d174d;
+  --color-accent-900: #831843;
+
+  /* Neutral: Cool Gray - 모던하고 깔끔한 회색 */
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
+
+  /* Legacy aliases for backward compatibility */
+  --color-lavender-50: #f7f5ff;
+  --color-lavender-100: #ede9fe;
+  --color-lavender-200: #ddd6fe;
+  --color-lavender-300: #c4b5fd;
+  --color-lavender-400: #a78bfa;
+  --color-lavender-500: #8b5cf6;
+  --color-lavender-600: #7c3aed;
+  --color-lavender-700: #6d28d9;
+  --color-lavender-800: #5b21b6;
+  --color-lavender-900: #4c1d95;
+
+  --color-sage-50: #f7f5ff;
+  --color-sage-100: #ede9fe;
+  --color-sage-200: #ddd6fe;
+  --color-sage-300: #c4b5fd;
+  --color-sage-400: #a78bfa;
+  --color-sage-500: #8b5cf6;
+  --color-sage-600: #7c3aed;
+  --color-sage-700: #6d28d9;
+  --color-sage-800: #5b21b6;
+  --color-sage-900: #4c1d95;
+
+  --color-mint-50: #f0fdfa;
+  --color-mint-100: #ccfbf1;
+  --color-mint-200: #99f6e4;
+  --color-mint-300: #5eead4;
+  --color-mint-400: #2dd4bf;
+  --color-mint-500: #14b8a6;
+  --color-mint-600: #0d9488;
+  --color-mint-700: #0f766e;
+  --color-mint-800: #115e59;
+  --color-mint-900: #134e4a;
+
+  --color-sky-50: #f0fdfa;
+  --color-sky-100: #ccfbf1;
+  --color-sky-200: #99f6e4;
+  --color-sky-300: #5eead4;
+  --color-sky-400: #2dd4bf;
+  --color-sky-500: #14b8a6;
+  --color-sky-600: #0d9488;
+  --color-sky-700: #0f766e;
+  --color-sky-800: #115e59;
+  --color-sky-900: #134e4a;
+
+  --color-peach-50: #fdf2f8;
+  --color-peach-100: #fce7f3;
+  --color-peach-200: #fbcfe8;
+  --color-peach-300: #f9a8d4;
+  --color-peach-400: #f472b6;
+  --color-peach-500: #ec4899;
+  --color-peach-600: #db2777;
+  --color-peach-700: #be185d;
+  --color-peach-800: #9d174d;
+  --color-peach-900: #831843;
+
+  --color-coral-50: #fdf2f8;
+  --color-coral-100: #fce7f3;
+  --color-coral-200: #fbcfe8;
+  --color-coral-300: #f9a8d4;
+  --color-coral-400: #f472b6;
+  --color-coral-500: #ec4899;
+  --color-coral-600: #db2777;
+  --color-coral-700: #be185d;
+  --color-coral-800: #9d174d;
+  --color-coral-900: #831843;
+
+  --color-warm-50: #fdf2f8;
+  --color-warm-100: #fce7f3;
+  --color-warm-200: #fbcfe8;
+  --color-warm-300: #f9a8d4;
+  --color-warm-400: #f472b6;
+  --color-warm-500: #ec4899;
+  --color-warm-600: #db2777;
+  --color-warm-700: #be185d;
+  --color-warm-800: #9d174d;
+  --color-warm-900: #831843;
+
+  --color-warmgray-50: #f9fafb;
+  --color-warmgray-100: #f3f4f6;
+  --color-warmgray-200: #e5e7eb;
+  --color-warmgray-300: #d1d5db;
+  --color-warmgray-400: #9ca3af;
+  --color-warmgray-500: #6b7280;
+  --color-warmgray-600: #4b5563;
+  --color-warmgray-700: #374151;
+  --color-warmgray-800: #1f2937;
+  --color-warmgray-900: #111827;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

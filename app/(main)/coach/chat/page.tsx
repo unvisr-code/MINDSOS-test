@@ -165,7 +165,7 @@ export default function ChatPage() {
               <div
                 className={`max-w-[80%] sm:max-w-[75%] md:max-w-[70%] rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 ${
                   message.role === 'user'
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-lavender-500 text-white'
                     : 'bg-white text-gray-900 border border-gray-200 shadow-sm'
                 }`}
               >
@@ -201,14 +201,14 @@ export default function ChatPage() {
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
             placeholder="메시지를 입력하세요..."
-            className="flex-1 px-3 sm:px-4 py-3 text-base bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-colors"
+            className="flex-1 px-3 sm:px-4 py-3 text-base bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-lavender-500 focus:border-transparent focus:bg-white transition-colors"
             style={{ fontSize: '16px' }}
             disabled={isTyping}
           />
           <button
             onClick={handleSendMessage}
             disabled={!inputMessage.trim() || isTyping}
-            className="px-3 sm:px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 active:bg-indigo-800 transition-colors disabled:opacity-50 disabled:bg-gray-400 flex items-center justify-center touch-manipulation min-w-[48px] min-h-[48px]"
+            className="px-3 sm:px-4 py-3 bg-lavender-500 text-white rounded-xl hover:bg-lavender-600 active:bg-lavender-700 transition-colors disabled:opacity-50 disabled:bg-gray-400 flex items-center justify-center touch-manipulation min-w-[48px] min-h-[48px]"
             aria-label="메시지 전송"
           >
             <Send className="w-5 h-5" />
@@ -237,7 +237,7 @@ export default function ChatPage() {
                   onClick={() => handleCoachSelect(coach)}
                   className={`w-full p-3 sm:p-4 rounded-xl border-2 transition-all touch-manipulation active:scale-[0.98] ${
                     selectedCoach.id === coach.id
-                      ? 'border-indigo-600 bg-indigo-50'
+                      ? 'border-lavender-600 bg-lavender-50'
                       : 'border-gray-200 hover:border-gray-300 active:border-gray-400'
                   }`}
                 >

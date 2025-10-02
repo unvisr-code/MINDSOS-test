@@ -33,24 +33,43 @@ export default function ContentPage() {
   const getColor = (type: string) => {
     switch (type) {
       case 'tip':
-        return 'from-yellow-500 to-orange-500';
+        return 'from-peach-400 to-peach-500';
       case 'newsletter':
-        return 'from-blue-500 to-indigo-500';
+        return 'from-lavender-400 to-lavender-500';
       case 'music':
-        return 'from-purple-500 to-pink-500';
+        return 'from-mint-400 to-mint-500';
       case 'sns':
-        return 'from-green-500 to-teal-500';
+        return 'from-lavender-500 to-lavender-600';
       default:
         return 'from-gray-500 to-gray-600';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 pt-12 pb-8">
-        <h1 className="text-2xl font-bold mb-2">콘텐츠</h1>
-        <p className="text-purple-100">마음을 채우는 콘텐츠</p>
+    <div className="min-h-screen bg-sage-50">
+      {/* Simple Header */}
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 pt-safe pt-8 pb-4">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">콘텐츠</h1>
+        <p className="text-sm text-gray-600 mb-3">마음을 채우는 순간들</p>
+
+        {/* Filter Chips */}
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+          <button className="px-4 py-2 rounded-full bg-sage-500 text-white text-sm font-medium whitespace-nowrap">
+            전체
+          </button>
+          <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors touch-manipulation">
+            명상
+          </button>
+          <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors touch-manipulation">
+            운동
+          </button>
+          <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors touch-manipulation">
+            글귀
+          </button>
+          <button className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition-colors touch-manipulation">
+            영상
+          </button>
+        </div>
       </div>
 
       {/* Main Carousel */}
@@ -110,7 +129,7 @@ export default function ContentPage() {
               key={index}
               onClick={() => setActiveIndex(index)}
               className={`h-2 rounded-full transition-all touch-manipulation ${
-                index === activeIndex ? 'w-8 bg-purple-600' : 'w-2 bg-gray-300'
+                index === activeIndex ? 'w-8 bg-lavender-600' : 'w-2 bg-gray-300'
               }`}
               aria-label={`콘텐츠 ${index + 1}번으로 이동`}
             />
@@ -127,7 +146,7 @@ export default function ContentPage() {
               key={content.id}
               onClick={() => setActiveIndex(index)}
               className={`bg-white rounded-xl p-3.5 sm:p-4 shadow-sm active:shadow-lg transition-all text-left touch-manipulation ${
-                index === activeIndex ? 'ring-2 ring-purple-600' : ''
+                index === activeIndex ? 'ring-2 ring-lavender-600' : ''
               }`}
             >
               <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${getColor(content.type)} rounded-full flex items-center justify-center text-white mb-2`}>

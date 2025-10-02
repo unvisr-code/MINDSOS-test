@@ -41,10 +41,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-lavender-50 via-mint-50 to-peach-50 px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-lavender-500 to-lavender-600 rounded-full mb-4">
             <Heart className="w-8 h-8 text-white" fill="white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">MindSOS</h1>
@@ -57,7 +57,7 @@ export default function LoginPage() {
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
                 isLogin
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-lavender-500 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -67,7 +67,7 @@ export default function LoginPage() {
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
                 !isLogin
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-lavender-500 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
@@ -85,7 +85,7 @@ export default function LoginPage() {
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lavender-500 focus:border-transparent"
                   placeholder="닉네임을 입력하세요"
                   required={!isLogin}
                 />
@@ -100,7 +100,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lavender-500 focus:border-transparent"
                 placeholder="email@example.com"
                 required
               />
@@ -114,7 +114,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lavender-500 focus:border-transparent"
                 placeholder="••••••••"
                 required
               />
@@ -129,7 +129,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-lavender-500 to-lavender-600 text-white py-3 rounded-lg font-medium hover:from-lavender-600 hover:to-lavender-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? '처리 중...' : isLogin ? '로그인' : '회원가입'}
             </button>

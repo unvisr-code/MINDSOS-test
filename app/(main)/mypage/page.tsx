@@ -52,21 +52,21 @@ export default function MyPage() {
       icon: FileText,
       label: '내가 작성한 글',
       count: 0,
-      color: 'text-indigo-600 bg-indigo-100',
+      color: 'text-primary-600 bg-gradient-to-br from-primary-100 to-primary-200',
       onClick: () => {},
     },
     {
       icon: Bookmark,
       label: '저장한 글',
       count: 0,
-      color: 'text-pink-600 bg-pink-100',
+      color: 'text-accent-600 bg-gradient-to-br from-accent-100 to-accent-200',
       onClick: () => {},
     },
     {
       icon: Trophy,
       label: '획득한 트로피',
       count: 1,
-      color: 'text-yellow-600 bg-yellow-100',
+      color: 'text-yellow-600 bg-gradient-to-br from-yellow-100 to-orange-100',
       onClick: () => {},
     },
   ];
@@ -80,50 +80,80 @@ export default function MyPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center">
+        <div className="relative">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-200"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-t-primary-600 border-r-secondary-600 absolute top-0 left-0"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 pt-12 pb-8">
-        <h1 className="text-2xl font-bold mb-2">마이페이지</h1>
-        <p className="text-indigo-100">나의 활동을 확인하세요</p>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 pb-20">
+      {/* Modern Gradient Header */}
+      <div className="relative bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 text-white px-6 pt-safe pt-10 pb-24 overflow-hidden">
+        {/* Decorative Background */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary-400/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
+
+        <div className="relative">
+          <h1 className="text-3xl font-bold mb-2 tracking-tight">마이페이지</h1>
+          <p className="text-white/80 text-base font-medium">나의 성장 기록</p>
+        </div>
       </div>
 
-      {/* Profile Section */}
-      <div className="px-6 -mt-4 mb-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-3xl font-bold text-white">
-              {userProfile?.displayName?.charAt(0) || 'U'}
+      {/* Floating 3D Profile Card */}
+      <div className="px-6 -mt-16 relative z-20 mb-6">
+        <div className="bg-white rounded-3xl p-6 shadow-2xl shadow-primary-500/20 border border-primary-100/50 hover:shadow-3xl hover:shadow-primary-500/30 hover:-translate-y-1 transition-all">
+          <div className="flex items-start gap-4 mb-6">
+            {/* Modern Gradient Avatar */}
+            <div className="relative flex-shrink-0">
+              <div className="w-24 h-24 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-3xl flex items-center justify-center text-4xl font-bold text-white shadow-xl shadow-primary-500/30">
+                {userProfile?.displayName?.charAt(0) || 'U'}
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-2xl border-4 border-white flex items-center justify-center shadow-lg">
+                <span className="text-sm text-white font-bold">✓</span>
+              </div>
             </div>
-            <div className="flex-1">
-              <h2 className="text-xl font-bold text-gray-900">{userProfile?.displayName || '사용자'}</h2>
-              <p className="text-gray-500 text-sm">{user?.email}</p>
+
+            {/* Profile Info */}
+            <div className="flex-1 min-w-0">
+              <h2 className="text-2xl font-bold text-neutral-900 mb-1 truncate tracking-tight">
+                {userProfile?.displayName || '사용자'}
+              </h2>
+              <p className="text-sm text-neutral-500 mb-3 truncate font-medium">{user?.email}</p>
+              <div className="flex items-center gap-2 text-xs text-primary-700 bg-gradient-to-r from-primary-100 to-secondary-100 px-4 py-2 rounded-2xl inline-flex font-bold shadow-sm">
+                <Trophy className="w-4 h-4" />
+                <span>{userProfile?.streak || 0}일 연속 출석</span>
+              </div>
             </div>
+
+            {/* Edit Button */}
             <button
               onClick={handleEditProfile}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="flex-shrink-0 p-3 hover:bg-primary-50 rounded-2xl transition-all touch-manipulation group"
+              aria-label="프로필 수정"
             >
-              <Edit className="w-5 h-5 text-gray-600" />
+              <Edit className="w-5 h-5 text-neutral-600 group-hover:text-primary-600 transition-colors" />
             </button>
           </div>
-          <div className="flex gap-4 pt-4 border-t border-gray-100">
-            <div className="flex-1 text-center">
-              <div className="text-2xl font-bold text-indigo-600">{userProfile?.streak || 0}</div>
-              <div className="text-xs text-gray-500 mt-1">출석일수</div>
+
+          {/* Enhanced Stats Grid */}
+          <div className="grid grid-cols-3 gap-4 pt-5 border-t border-neutral-100">
+            <div className="text-center">
+              <div className="text-3xl font-bold bg-gradient-to-br from-primary-600 to-secondary-600 bg-clip-text text-transparent mb-1">
+                {userProfile?.streak || 0}
+              </div>
+              <div className="text-xs text-neutral-500 font-semibold">출석일수</div>
             </div>
-            <div className="flex-1 text-center border-l border-gray-200">
-              <div className="text-2xl font-bold text-purple-600">0</div>
-              <div className="text-xs text-gray-500 mt-1">작성글</div>
+            <div className="text-center border-l border-neutral-200">
+              <div className="text-3xl font-bold bg-gradient-to-br from-primary-600 to-secondary-600 bg-clip-text text-transparent mb-1">0</div>
+              <div className="text-xs text-neutral-500 font-semibold">작성글</div>
             </div>
-            <div className="flex-1 text-center border-l border-gray-200">
-              <div className="text-2xl font-bold text-pink-600">1</div>
-              <div className="text-xs text-gray-500 mt-1">트로피</div>
+            <div className="text-center border-l border-neutral-200">
+              <div className="text-3xl font-bold bg-gradient-to-br from-primary-600 to-secondary-600 bg-clip-text text-transparent mb-1">1</div>
+              <div className="text-xs text-neutral-500 font-semibold">트로피</div>
             </div>
           </div>
         </div>
@@ -197,7 +227,7 @@ export default function MyPage() {
                   type="text"
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lavender-500 focus:border-transparent"
                   placeholder="닉네임을 입력하세요"
                 />
               </div>
@@ -224,7 +254,7 @@ export default function MyPage() {
               <button
                 onClick={handleUpdateProfile}
                 disabled={!editName.trim() || updating}
-                className="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-3 bg-lavender-500 text-white rounded-xl font-medium hover:bg-lavender-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {updating ? (
                   <>

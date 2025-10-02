@@ -129,7 +129,7 @@ export default function MissionPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-lavender-600" />
       </div>
     );
   }
@@ -137,22 +137,22 @@ export default function MissionPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white px-6 pt-12 pb-8">
+      <div className="bg-gradient-to-r from-lavender-500 to-lavender-600 text-white px-6 pt-12 pb-8">
         <h1 className="text-2xl font-bold mb-2">미션 & 리포트</h1>
-        <p className="text-green-100">오늘도 한 걸음씩 성장해요</p>
+        <p className="text-lavender-100">오늘도 한 걸음씩 성장해요</p>
       </div>
 
       <div className="px-6 py-6 space-y-6">
         {/* 달성률 카드 */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl p-5">
+          <div className="bg-gradient-to-br from-lavender-500 to-lavender-600 text-white rounded-2xl p-5">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-5 h-5" />
               <span className="text-sm opacity-90">오늘의 달성률</span>
             </div>
             <div className="text-3xl font-bold">{completionRate}%</div>
           </div>
-          <div className="bg-gradient-to-br from-orange-500 to-pink-600 text-white rounded-2xl p-5">
+          <div className="bg-gradient-to-br from-peach-400 to-peach-500 text-white rounded-2xl p-5">
             <div className="flex items-center gap-2 mb-2">
               <Award className="w-5 h-5" />
               <span className="text-sm opacity-90">연속 달성</span>
@@ -167,7 +167,7 @@ export default function MissionPage() {
             <h3 className="font-semibold text-gray-900">오늘의 미션</h3>
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+              className="flex items-center gap-1 text-sm text-lavender-600 hover:text-lavender-700 font-medium"
             >
               <Plus className="w-4 h-4" />
               추가
@@ -189,8 +189,8 @@ export default function MissionPage() {
                     onClick={() => toggleMission(mission.id, mission.completed)}
                     className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
                       mission.completed
-                        ? 'bg-green-600 border-green-600'
-                        : 'border-gray-300 hover:border-green-400'
+                        ? 'bg-mint-500 border-mint-500'
+                        : 'border-gray-300 hover:border-mint-400'
                     }`}
                   >
                     {mission.completed && <CheckCircle2 className="w-4 h-4 text-white" />}
@@ -222,9 +222,9 @@ export default function MissionPage() {
               <Line
                 type="monotone"
                 dataKey="completion"
-                stroke="#6366f1"
+                stroke="#8B7FD6"
                 strokeWidth={3}
-                dot={{ fill: '#6366f1', r: 4 }}
+                dot={{ fill: '#8B7FD6', r: 4 }}
                 activeDot={{ r: 6 }}
               />
             </LineChart>
@@ -253,9 +253,9 @@ export default function MissionPage() {
                   key={index}
                   className={`aspect-square flex items-center justify-center text-sm rounded-lg ${
                     isCompleted
-                      ? 'bg-green-100 text-green-700 font-semibold'
+                      ? 'bg-mint-100 text-mint-700 font-semibold'
                       : isToday
-                      ? 'bg-indigo-100 text-indigo-700 font-semibold'
+                      ? 'bg-lavender-100 text-lavender-700 font-semibold'
                       : 'text-gray-600'
                   }`}
                 >
@@ -267,7 +267,7 @@ export default function MissionPage() {
         </div>
 
         {/* 공유 버튼 */}
-        <button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 shadow-lg">
+        <button className="w-full bg-gradient-to-r from-lavender-500 to-lavender-600 text-white py-4 rounded-xl font-medium hover:from-lavender-600 hover:to-lavender-700 transition-all flex items-center justify-center gap-2 shadow-lg">
           <Share2 className="w-5 h-5" />
           성과 공유하기
         </button>
@@ -283,7 +283,7 @@ export default function MissionPage() {
               value={newMissionTitle}
               onChange={(e) => setNewMissionTitle(e.target.value)}
               placeholder="미션 제목을 입력하세요"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent mb-4"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-lavender-500 focus:border-transparent mb-4"
               autoFocus
             />
             <div className="flex gap-3">
@@ -299,7 +299,7 @@ export default function MissionPage() {
               <button
                 onClick={handleAddMission}
                 disabled={!newMissionTitle.trim()}
-                className="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-3 bg-lavender-500 text-white rounded-xl font-medium hover:bg-lavender-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 추가
               </button>

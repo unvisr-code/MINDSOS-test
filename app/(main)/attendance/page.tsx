@@ -74,54 +74,67 @@ export default function AttendancePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 sm:px-6 pt-12 pb-8">
-        <div className="flex items-center gap-4 mb-6">
+    <div className="min-h-screen bg-sage-50">
+      {/* Simple Header with Stats */}
+      <div className="sticky top-0 z-10 bg-gradient-to-b from-sage-500 to-sage-600 text-white px-4 sm:px-6 pt-safe pt-6 pb-5 shadow-sm">
+        <div className="flex items-center gap-3 mb-4">
           <button
-            onClick={() => router.back()}
-            className="p-2 hover:bg-white/10 rounded-full touch-manipulation"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <h1 className="text-2xl font-bold">출석 현황</h1>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
-            <div className="text-2xl sm:text-3xl font-bold">{currentStreak}</div>
-            <div className="text-xs sm:text-sm opacity-90 mt-1">연속 출석</div>
-          </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
-            <div className="text-2xl sm:text-3xl font-bold">{totalAttendance}</div>
-            <div className="text-xs sm:text-sm opacity-90 mt-1">총 출석일</div>
-          </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
-            <div className="text-2xl sm:text-3xl font-bold">{thisMonthAttendance}</div>
-            <div className="text-xs sm:text-sm opacity-90 mt-1">이번 달</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Calendar Navigation */}
-      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <button
-            onClick={handlePrevMonth}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors touch-manipulation"
+            onClick={() => router.push('/home')}
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors touch-manipulation"
+            aria-label="홈으로 이동"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <h2 className="text-lg font-semibold flex items-center gap-2">
-            <CalendarIcon className="w-5 h-5" />
+          <div className="flex-1">
+            <h1 className="text-xl font-bold">출석 현황</h1>
+            <p className="text-xs text-sage-100">꾸준함이 만드는 기적</p>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          <div className="bg-white/90 rounded-xl p-3 text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <Trophy className="w-4 h-4 text-yellow-600" />
+              <div className="text-2xl font-bold text-gray-900">{currentStreak}</div>
+            </div>
+            <div className="text-[10px] text-gray-600">연속 출석</div>
+          </div>
+          <div className="bg-white/90 rounded-xl p-3 text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <CalendarIcon className="w-4 h-4 text-sky-600" />
+              <div className="text-2xl font-bold text-gray-900">{totalAttendance}</div>
+            </div>
+            <div className="text-[10px] text-gray-600">총 출석일</div>
+          </div>
+          <div className="bg-white/90 rounded-xl p-3 text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <div className="w-3 h-3 bg-coral-500 rounded-full"></div>
+              <div className="text-2xl font-bold text-gray-900">{thisMonthAttendance}</div>
+            </div>
+            <div className="text-[10px] text-gray-600">이번 달</div>
+          </div>
+        </div>
+
+        {/* Calendar Navigation */}
+        <div className="flex items-center justify-between bg-white/90 rounded-xl px-3 py-2.5">
+          <button
+            onClick={handlePrevMonth}
+            className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors touch-manipulation"
+            aria-label="이전 달"
+          >
+            <ChevronLeft className="w-4 h-4 text-gray-700" />
+          </button>
+          <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+            <CalendarIcon className="w-4 h-4" />
             {format(currentMonth, 'yyyy년 M월', { locale: ko })}
           </h2>
           <button
             onClick={handleNextMonth}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors touch-manipulation"
+            className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors touch-manipulation"
+            aria-label="다음 달"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-4 h-4 text-gray-700" />
           </button>
         </div>
       </div>
@@ -135,7 +148,7 @@ export default function AttendancePage() {
               <div
                 key={day}
                 className={`text-center text-sm font-medium py-2 ${
-                  index === 0 ? 'text-red-500' : index === 6 ? 'text-blue-500' : 'text-gray-600'
+                  index === 0 ? 'text-red-500' : index === 6 ? 'text-lavender-500' : 'text-gray-600'
                 }`}
               >
                 {day}
@@ -161,9 +174,9 @@ export default function AttendancePage() {
                   key={date.toString()}
                   className={`aspect-square rounded-lg flex flex-col items-center justify-center p-1 ${
                     attendance?.checked
-                      ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md'
+                      ? 'bg-gradient-to-br from-lavender-500 to-lavender-600 text-white shadow-md'
                       : 'bg-gray-50 text-gray-400'
-                  } ${isToday ? 'ring-2 ring-indigo-500' : ''}`}
+                  } ${isToday ? 'ring-2 ring-lavender-500' : ''}`}
                 >
                   <span className={`text-sm sm:text-base font-medium mb-1`}>
                     {format(date, 'd')}

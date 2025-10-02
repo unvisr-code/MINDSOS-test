@@ -59,37 +59,41 @@ export default function DiaryPage() {
   const selectedDiary = selectedDate ? getDiaryForDate(selectedDate) : null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4 sticky top-0 z-10">
-        <div className="flex items-center gap-4">
+    <div className="min-h-screen bg-sage-50">
+      {/* Simple Header */}
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 sm:px-6 pt-safe pt-4 pb-4 shadow-sm">
+        <div className="flex items-center gap-3 mb-3">
           <button
-            onClick={() => router.back()}
-            className="p-2 hover:bg-gray-100 rounded-full touch-manipulation"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <h1 className="text-xl font-bold">한 줄 일기</h1>
-        </div>
-      </div>
-
-      {/* Calendar Navigation */}
-      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-4">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <button
-            onClick={handlePrevMonth}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors touch-manipulation"
+            onClick={() => router.push('/home')}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors touch-manipulation"
+            aria-label="홈으로 이동"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <h2 className="text-lg font-semibold">
+          <div>
+            <h1 className="text-lg font-bold text-gray-900">한 줄 일기</h1>
+            <p className="text-xs text-gray-600">감정을 기록해보세요</p>
+          </div>
+        </div>
+
+        {/* Calendar Navigation */}
+        <div className="flex items-center justify-between bg-sage-50 rounded-xl px-4 py-2.5 border border-sage-200">
+          <button
+            onClick={handlePrevMonth}
+            className="p-1.5 hover:bg-sage-100 rounded-lg transition-colors touch-manipulation"
+            aria-label="이전 달"
+          >
+            <ChevronLeft className="w-4 h-4 text-gray-700" />
+          </button>
+          <h2 className="text-base font-semibold text-gray-900">
             {format(currentMonth, 'yyyy년 M월', { locale: ko })}
           </h2>
           <button
             onClick={handleNextMonth}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors touch-manipulation"
+            className="p-1.5 hover:bg-sage-100 rounded-lg transition-colors touch-manipulation"
+            aria-label="다음 달"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-4 h-4 text-gray-700" />
           </button>
         </div>
       </div>
@@ -103,7 +107,7 @@ export default function DiaryPage() {
               <div
                 key={day}
                 className={`text-center text-sm font-medium py-2 ${
-                  index === 0 ? 'text-red-500' : index === 6 ? 'text-blue-500' : 'text-gray-600'
+                  index === 0 ? 'text-red-500' : index === 6 ? 'text-lavender-500' : 'text-gray-600'
                 }`}
               >
                 {day}
@@ -133,7 +137,7 @@ export default function DiaryPage() {
                     diary
                       ? 'bg-white shadow-sm hover:shadow-md active:scale-95'
                       : 'bg-gray-50'
-                  } ${isToday ? 'ring-2 ring-indigo-500' : ''}`}
+                  } ${isToday ? 'ring-2 ring-lavender-500' : ''}`}
                 >
                   <span
                     className={`text-sm sm:text-base font-medium mb-1 ${
@@ -142,7 +146,7 @@ export default function DiaryPage() {
                         : dayOfWeek === 0
                         ? 'text-red-500'
                         : dayOfWeek === 6
-                        ? 'text-blue-500'
+                        ? 'text-lavender-500'
                         : 'text-gray-700'
                     }`}
                   >
@@ -167,7 +171,7 @@ export default function DiaryPage() {
 
       {/* Statistics */}
       <div className="px-4 sm:px-6 pb-24">
-        <div className="max-w-4xl mx-auto bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl p-6">
+        <div className="max-w-4xl mx-auto bg-gradient-to-br from-lavender-500 to-lavender-600 text-white rounded-2xl p-6">
           <h3 className="font-semibold mb-4">일기 통계</h3>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
@@ -217,7 +221,7 @@ export default function DiaryPage() {
 
             <button
               onClick={() => setShowModal(false)}
-              className="mt-4 w-full bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition-colors"
+              className="mt-4 w-full bg-lavender-500 text-white py-3 rounded-xl font-medium hover:bg-lavender-600 transition-colors"
             >
               닫기
             </button>

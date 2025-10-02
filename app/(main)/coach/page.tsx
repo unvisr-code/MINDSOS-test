@@ -123,7 +123,7 @@ export default function CoachPage() {
             <button
               onClick={handleSubmit}
               disabled={!title || !content || submitting}
-              className="text-indigo-600 font-semibold active:text-indigo-700 disabled:opacity-50 flex items-center gap-2 px-2 py-1 touch-manipulation"
+              className="text-lavender-600 font-semibold active:text-lavender-700 disabled:opacity-50 flex items-center gap-2 px-2 py-1 touch-manipulation"
             >
               {submitting ? (
                 <>
@@ -166,7 +166,7 @@ export default function CoachPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="제목을 입력하세요"
-              className="w-full text-lg sm:text-xl font-semibold border-0 border-b-2 border-gray-200 focus:border-indigo-600 focus:ring-0 pb-2"
+              className="w-full text-lg sm:text-xl font-semibold border-0 border-b-2 border-gray-200 focus:border-lavender-600 focus:ring-0 pb-2"
               disabled={submitting}
             />
           </div>
@@ -187,7 +187,7 @@ export default function CoachPage() {
                 type="checkbox"
                 checked={isPrivate}
                 onChange={(e) => setIsPrivate(e.target.checked)}
-                className="w-5 h-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                className="w-5 h-5 rounded border-gray-300 text-lavender-600 focus:ring-lavender-500"
                 disabled={submitting}
               />
               <div className="flex items-center gap-2">
@@ -222,7 +222,7 @@ export default function CoachPage() {
                     onClick={() => handleCoachSelect(coach)}
                     className={`w-full p-3.5 sm:p-4 rounded-xl border-2 transition-all touch-manipulation active:scale-[0.98] ${
                       selectedCoach.id === coach.id
-                        ? 'border-indigo-600 bg-indigo-50'
+                        ? 'border-lavender-600 bg-lavender-50'
                         : 'border-gray-200 active:border-gray-300'
                     }`}
                   >
@@ -255,27 +255,50 @@ export default function CoachPage() {
   }, [selectedLetter]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 pt-12 pb-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold">AI 코치</h1>
-          <p className="text-indigo-100 mt-1">마음을 나눠보세요</p>
-        </div>
+    <div className="min-h-screen bg-sage-50">
+      {/* Simple Header */}
+      <div className="bg-gradient-to-b from-sage-500 to-sage-600 text-white px-4 sm:px-6 pt-safe pt-8 sm:pt-10 pb-6">
+        <h1 className="text-2xl font-bold mb-2">AI 코치</h1>
+        <p className="text-sage-100 text-sm">마음을 나누고 성장하는 대화</p>
+      </div>
 
-        {/* AI 코치 소개 */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
-          <h3 className="font-semibold text-lg mb-3">다양한 AI 코치와 대화하세요</h3>
-          <div className="grid grid-cols-3 gap-3">
+      {/* AI 코치 선택 */}
+      <div className="px-4 sm:px-6 -mt-4 mb-6">
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-sage-100">
+          <h3 className="font-semibold text-base text-gray-900 mb-4">당신의 마음 동반자를 선택하세요</h3>
+
+          {/* Coach Grid */}
+          <div className="grid grid-cols-3 gap-3 mb-4">
             {mockAICoaches.map((coach) => (
-              <div key={coach.id} className="text-center">
-                <div className={`w-14 h-14 mx-auto bg-gradient-to-br ${coach.color} rounded-full flex items-center justify-center text-2xl mb-2`}>
+              <button
+                key={coach.id}
+                onClick={() => router.push('/coach/new')}
+                className="flex flex-col items-center gap-2 p-3 rounded-xl bg-sage-50 hover:bg-sage-100 active:bg-sage-200 transition-colors touch-manipulation"
+                aria-label={`${coach.name} 코치 선택`}
+              >
+                {/* Avatar */}
+                <div className="relative w-14 h-14 bg-white rounded-xl flex items-center justify-center text-3xl shadow-sm">
                   {coach.emoji}
+                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-sky-500 rounded-full border-2 border-white"></div>
                 </div>
-                <p className="text-xs font-medium">{coach.name}</p>
-                <p className="text-xs text-indigo-100 mt-0.5">{coach.personality}</p>
-              </div>
+                <div className="text-center">
+                  <span className="text-xs font-semibold text-gray-900 block">{coach.name}</span>
+                  <span className="text-[10px] text-gray-500 block mt-0.5 line-clamp-1">{coach.personality}</span>
+                </div>
+              </button>
             ))}
+          </div>
+
+          {/* Info */}
+          <div className="pt-4 border-t border-gray-100 flex items-center justify-center gap-4 text-xs text-gray-600">
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 bg-sky-500 rounded-full"></div>
+              <span>{mockAICoaches.length}명 대기중</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
+              <span>24/7 상담 가능</span>
+            </div>
           </div>
         </div>
       </div>
@@ -289,7 +312,7 @@ export default function CoachPage() {
       <div className="px-4 py-4 space-y-3 pb-24">
         {loading ? (
           <div className="text-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mx-auto" />
+            <Loader2 className="w-8 h-8 animate-spin text-lavender-600 mx-auto" />
           </div>
         ) : letters.length === 0 ? (
           <div className="text-center py-12">
@@ -332,7 +355,7 @@ export default function CoachPage() {
       {/* Floating Action Button */}
       <button
         onClick={() => router.push('/coach/chat')}
-        className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full shadow-lg active:shadow-xl transition-all flex items-center justify-center active:scale-95 touch-manipulation"
+        className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-peach-400 to-peach-500 text-white rounded-full shadow-lg active:shadow-xl transition-all flex items-center justify-center active:scale-95 touch-manipulation"
         aria-label="AI 코치와 대화하기"
       >
         <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7" />
